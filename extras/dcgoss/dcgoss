@@ -65,7 +65,13 @@ get_docker_file() {
 }
 
 # Main
-tmp_dir="${GOSS_TMPDIR:-$(mktemp -d /tmp/tmp.XXXXXXXXXX)}"
+if [[ -n "$GOSS_TMPDIR" ]]; then
+    mkdir -p "$GOSS_TMPDIR"
+else
+    GOSS_TMPDIR="$(mktemp -d /tmp/tmp.XXXXXXXXXX)"
+fi
+
+tmp_dir="${GOSS_TMPDIR}"
 chmod 777 "$tmp_dir"
 # shellcheck disable=SC2154
 trap 'ret=$?; cleanup; info "Test ran for a total of $SECONDS seconds"; exit $ret' EXIT
